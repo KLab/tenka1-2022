@@ -99,6 +99,7 @@ Runnerはマッチへの参加とbotの起動を支援してくれるプログ�
 ## 6. Runnerの設定
 以下の手順でRunnerの共通設定を行ってください。
 
+1. GameServer で https://2022contest.gbc.tenka1.klab.jp を指定し `[set]` をクリックする (14:51追記)
 1. プログラムがあるディレクトリにpwdを設定する
     - Pythonの場合は `[リポジトリへのパス]/py` を設定する
 1. TOKENを自分のものに変更し、`[set TOKEN]` をクリックする
