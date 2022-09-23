@@ -223,21 +223,21 @@ struct Move {
 	void update(const vector<int>& a) {
 		// エージェントの移動処理
 		for (int idx = 0; idx < 6; ++ idx) {
-			if (move[idx] == -1) {
+			if (a[idx] == -1) {
 				continue;
 			}
-			rotate_agent(idx, move[idx]);
+			rotate_agent(idx, a[idx]);
 			move_forward(idx);
 		}
 
 		// フィールドの更新処理
 		for (int idx = 0; idx < 6; ++ idx) {
-			if (move[idx] == -1) {
+			if (a[idx] == -1) {
 				continue;
 			}
 			bool ok = true;
 			for (int j = 0; j < 6; ++ j) {
-				if (idx == j || move[j] == -1 || !is_same_pos(agent[idx], agent[j]) || is_owned_cell(idx)) {
+				if (idx == j || a[j] == -1 || !is_same_pos(agent[idx], agent[j]) || is_owned_cell(idx)) {
 					continue;
 				}
 				// 移動した先にidx以外のエージェントがいる場合は修復しか行えないのでidxのエージェントのマスではない場合は更新しないようにフラグをfalseにする
