@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>天下一Runner</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+</head>
+<body>
+<script>
+    function autoReload() {
+        let checkbox = document.getElementById('autoReload');
+        if (checkbox.checked) {
+            location.reload();
+        }
+        setTimeout(autoReload, 5000);
+    }
+
+    function autoReloadChange() {
+        let checkbox = document.getElementById('autoReload');
+        sessionStorage.setItem('autoReloadChecked', checkbox.checked);
+    }
+
+    function offAutoReload() {
+        let checkbox = document.getElementById('autoReload');
+        checkbox.checked = false;
+    }
+
+    window.onload = function() {
+        setTimeout(autoReload, 5000);
+    
+        let checkbox = document.getElementById('autoReload');
+        checkbox.addEventListener('change', autoReloadChange);
+    
+        let storageValue = sessionStorage.getItem('autoReloadChecked');
+        if (storageValue === 'true') {
+            checkbox.checked = true;
+        }
+
+        let offAutoReloadForcusElementIds = ['server', 'pwd', 'token', 'mode', 'delay', 'command', 'agent0', 'agent1', 'agent2', 'agent3', 'registerCommand'];
+        offAutoReloadForcusElementIds.forEach(
+            elementId => {
+                let element = document.getElementById(elementId);
+                element.addEventListener('focus', offAutoReload);
+            }
+        )
+    }
+</script>
+<div class="container">
+{{ if .errorMsg }}
+<hr>
+<h2>エラー</h2>
+<div class="alert alert-danger" role="alert">
+    {{ .errorMsg}}
+</div>
+<div class="col-auto form-text text-muted">
+    ※直近30秒以内に起こったエラーを表示しています
+</div>
+{{ end }}
+<hr>
+<h2>設定</h2>
+<form action="./setServer" method="post">
+    <div class="mb-1 row">
+        <div class="col-sm-1">
+            <label class="col-form-label" for="server">GameServer</label>
+        </div>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="server" value="{{ .conf.GameServer }}" name="server" />
+        </div>
+        <div class="col-auto">
+            <input type="submit" class="btn btn-outline-primary form-control" value="set">
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <div class="col-auto form-text text-muted">
+            ゲームサーバーのアドレスを指定します
+        </div>
+    </div>
+    </p>
+</form>
+<div class="mb-1 row">
+    <div class="col-sm-1">
+        <label for="outputDir" class="col-form-label">outputDir</label>
+    </div>
+    <div class="col-sm-8">
+        <input type="text" readonly class="form-control-plaintext" id="outputDir" value="{{ .outputDir }}">
+    </div>
+    <div class="mb-3 row">
+        <div class="col-auto form-text text-muted">
+            ログが出力されるディレクトリ (起動時のカレントディレクトリ /output 以下に設定され変更はできません)
+        </div>
+    </div>
+</div>
+<form action="./cd" method="post">
+    <div class="mb-1 row">
+        <div class="col-sm-1">
+            <label class="col-form-label" for="pwd">pwd</label>
+        </div>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="pwd" value="{{ .pwd }}" name="pwd" />
+        </div>
+        <div class="col-auto">
+            <input type="submit" class="btn btn-outline-primary form-control" value="cd">
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <div class="col-auto form-text text-muted">
+            Bot実行時のディレクトリを変更します
+        </div>
+    </div>
+</form>
+<form action="./setToken" method="post">
+    <div class="mb-1 row">
+        <div class="col-sm-1">
+            <label class="col-form-label" for="token">TOKEN</label>
+        </div>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="token" value="{{ .conf.Token }}" name="token" />
+        </div>
+        <div class="col-auto">
+            <input type="submit" class="btn btn-outline-primary form-control" value="set TOKEN">
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <div class="col-auto form-text text-muted">
+            ポータルサイトに記載されているあなたのトークンを指定します
+        </div>
+    </div>
+</form>
+<div class="mb-1 row">
+    <div class="col-sm-1">
+        <label for="outputDir" class="col-form-label">自動更新</label>
+    </div>
+    <div class="col-sm-1 form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" id="autoReload">
+    </div>
+    <div class="mb-3 row">
+        <div class="col-auto form-text text-muted">
+            チェックボックスをつけるとこのページが5秒に1回自動でリロードされます。<br>
+            ※ 設定やコマンドを入力中はリロードされなくなります
+        </div>
+    </div>
+</div>
+<hr>
+<h2>練習試合</h2>
+<div class="mb-3 form-text text-muted">
+    NPCのみが相手の練習試合を行いBotの動作確認を行うことができます
+</div>
+<div>
+</div>
+<form action="./start" method="post">
+    <div class="mb-1 row">
+        <div class="col-sm-1">
+            <label class="col-form-label" for="mode">mode</label>
+        </div>
+        <div class="col-sm-1">
+            <input type="text" class="form-control" id="mode" value="{{ .conf.PracticeMode }}" name="mode" />
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <div class="col-auto form-text text-muted">
+            練習試合のモード (0:他のagentは移動しない, 1:他のagentはランダムに移動する)
+        </div>
+    </div>
+    <div class="mb-1 row">
+        <div class="col-sm-1">
+            <label class="col-form-label" for="delay">delay</label>
+        </div>
+        <div class="col-sm-1">
+            <input type="text" class="form-control" id="delay" value="{{ .conf.PracticeDelay }}" name="delay" />
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <div class="col-auto form-text text-muted">
+            開始までの遅延時間 (単位秒, 0以上10以下の整数)
+        </div>
+    </div>
+    <div class="mb-1 row">
+        <div class="col-sm-1">
+            <label class="col-form-label" for="command">command</label>
+        </div>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="command" value="{{ .conf.PracticeCommand }}" name="command" />
+        </div>
+        <div class="col-auto">
+            <input type="submit" class="btn btn-outline-primary form-control" value="start practice">
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <div class="col-auto form-text text-muted">
+            Botを起動するコマンドの指定 (コマンドは設定のpwdディレクトリで実行されます)
+        </div>
+    </div>
+</form>
+<hr>
+<h2>マッチング参加</h2>
+<div class="mb-3 form-text text-muted">
+    マッチングに参加するBotを登録します
+</div>
+<form action="./register" method="post">
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" name="agent0" id="agent0" checked>
+        <label class="form-check-label" for="agent0">0</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" name="agent1" id="agent1" checked>
+        <label class="form-check-label" for="agent1">1</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" name="agent2" id="agent2" checked>
+        <label class="form-check-label" for="agent2">2</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" name="agent3" id="agent3" checked>
+        <label class="form-check-label" for="agent3">3</label>
+    </div>
+    <div class="mb-3 row">
+        <div class="col-auto form-text text-muted">
+            どの番号にBotを登録するかを選択します。選択した番号すべてにcommandに記載された起動コマンドでBotが登録されます。
+        </div>
+    </div>
+    <div class="mb-1 row">
+        <div class="col-sm-1">
+            <label class="col-form-label" for="registerCommand">command</label>
+        </div>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="registerCommand" value="" name="registerCommand" />
+        </div>
+        <div class="col-auto">
+            <input type="submit" class="btn btn-outline-primary form-control" value="register">
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <div class="col-auto form-text text-muted">
+            選択した番号に、記載したcommandを起動コマンドとしてBot登録をします。
+        </div>
+    </div>
+</form>
+<table class="table table-hover">
+    {{ range $i, $v := .commands }}
+    <tr>
+        <td style="width:5%">{{ $i }}</td>
+        <td style="width:95%"><code>{{ $v }}</code></td>
+    </tr>
+    {{ end }}
+</table>
+<div class="mb-3 form-text text-muted">
+    各番号に登録されているBotの起動コマンド一覧です。登録されているものからラウンドロビン方式で選ばれjoin APIを使用して自動的にマッチングに参加されます。
+</div>
+<hr>
+<h3>実行中プロセス</h3>
+<div class="mb-3 form-text text-muted">
+    実行中のBotのプロセス情報です。(最新の情報に更新する場合はブラウザのリロードを行なってください)
+</div>
+<table class="table table-hover table-sm">
+    <tr>
+        <th>PID</th>
+        <th>GameID</th>
+        <th>実行コマンド</th>
+        <th>ゲームタイプ</th>
+    </tr>
+    {{ range $i, $v := .executingProcesses }}
+    <tr>
+        <td>{{ $v.Pid }}</td>
+        <td>{{ $v.GameId }}</td>
+        <td>{{ $v.Cmd }}</td>
+        <td>{{ $v.GameType }}</td>
+    </tr>
+    {{ end }}
+</table>
+<hr>
+<h3>実行履歴</h3>
+<div class="mb-3 form-text text-muted">
+    Botの実行履歴です。logボタンをクリックすることでその試合でのBotの標準出力/標準エラー出力を確認することができます。(最新の情報に更新する場合はブラウザのリロードを行なってください)
+</div>
+<table class="table table-hover table-sm">
+    <tr>
+        <th>GameID</th>
+        <th>実行コマンド</th>
+        <th>終了コード</th>
+        <th>実行ログ</th>
+    </tr>
+    {{ range $i, $v := .outputFiles }}
+    <tr {{ if eq $v.ExitCode 0}} class="table-success" {{ else if eq $v.ExitCode -99 }} class="table-warning" {{ else }} class="table-danger" {{ end }}>
+        <td>{{ $v.GameId }}</td>
+        <td>{{ $v.Cmd }}</td>
+        <td>
+            {{ if ne $v.ExitCode -99 }}
+            {{ $v.ExitCode }}
+            {{ end }}
+        </td>
+        <td><a class="btn btn-outline-primary" href="./readLog?id={{ $v.GameId }}" target="_blank" role="button">log</a></td>
+    </tr>
+    {{ end }}
+</table>
+<hr>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+</body>
+</html>
