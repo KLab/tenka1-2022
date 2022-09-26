@@ -32,6 +32,30 @@
 
 動作確認環境はいずれも Ubuntu 20.04 LTS
 
+## コンテスト結果
+
+### 予選
+- [予選終了時のランキング](result/qual.tsv)
+
+### 決勝
+
+- [決勝の各ゲームの結果](result/final.tsv)
+
+| 順位 | ユーザID | 順位点合計 |
+| - | - | - |
+| 1位 | tardigrade | 19 |
+| 2位 | eijirou | 17 |
+| 3位 | fuppy | 9 |
+| 4位 | penpenpen | 5 |
+| 5位 | yokozuna57 | 3 |
+| 6位 | WA_TLE | -9 |
+| 7位 | wanui | -21 |
+| 8位 | bono | -23 |
+
+## ゲームサーバのプログラム
+
+- [APIサーバとマッチングサーバ](game)
+
 ## ルール
 
 - コンテスト期間
@@ -50,5 +74,6 @@
 
 ## その他
 
-- [ギフトカード抽選プログラム](lottery/lottery.py) (key.txtは当選者決定後に公開します)
+- [ギフトカード抽選プログラム](lottery)
   - 抽選対象は join API で開始したゲームに一度以上 move API を実行した参加者です
+- [joinで開始した各ゲームのmoveデータ](result/moves.zip) (zip)
