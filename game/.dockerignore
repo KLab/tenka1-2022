@@ -1,0 +1,12 @@
+# common
+.vscode
+.gitignore
+README.md
+
+# C#
+bin
+obj
+
+# node
+build
+node_modules

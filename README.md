@@ -10,16 +10,6 @@
 - [Runnerの使い方](runner.md)
 - [ビジュアライザの使い方](visualizer.md)
 
-## ポータルサイト
-
-コンテストの参加に必要なAPIトークンの発行、運営への質問、ランキング、お知らせの確認ができます。
-
-ユーザ登録は、ユーザIDとパスワードの設定のみで完了します。
-
-[天下一 Game Battle Contest 2022 ポータルサイト](https://2022contest.gbc.tenka1.klab.jp/portal/index.html)
-
-- [ポータルサイトの使い方](portal.md)
-
 ## サンプルコード
 
 - [Go](go)
@@ -55,6 +45,39 @@
 ## ゲームサーバのプログラム
 
 - [APIサーバとマッチングサーバ](game)
+
+## ローカル実行
+ゲームサーバーを手元で動かせる環境を用意しました。
+
+docker をインストールした環境で、以下のコマンドを実行してください。
+
+起動
+```
+$ docker compose up
+```
+
+ユーザー登録
+```
+# ユーザID: user0001 トークン: token0001 のユーザーを作成
+$ docker compose exec gamedb redis-cli HSET user_token token0001 user0001
+```
+
+以下のURLでAPIとビジュアライザにアクセス可能です。
+- http://localhost:8008/api/move/token0001/1/1
+- http://localhost:8008/visualizer/index.html?token=token0001
+
+Runnerを使用する場合は、Runnerを起動して設定を以下のように変更します。
+- GameServer: `localhost:8008`
+
+## ビジュアライザで使用したライブラリ等
+
+- ビジュアライザ本体 © 2022 KLab Inc. All rights reserved.
+- Game BGM and SE by KLab Sound Team © 2022 KLab Inc. All rights reserved.
+- [DOTween © 2014 Daniele Giardini - Demigiant](http://dotween.demigiant.com)
+- [Hurisake.JsonDeserializer by hasipon](https://github.com/hasipon/Hurisake.JsonDeserializer)
+- [Rajdhani (OFL) © Indian Type Foundry](https://fonts.google.com/specimen/Rajdhani)
+- [Bootstrap Icons (MIT) © The Bootstrap Authors](https://github.com/twbs/icons)
+- [Rank 3 icon (CC BY 3.0) © Skoll](https://game-icons.net/1x1/skoll/rank-3.html)
 
 ## ルール
 

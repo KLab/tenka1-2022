@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+  gamedb:
+    image: redis:5.0.5
+    volumes:
+      - gamedbvolume:/data
+
+  game:
+    build:
+      context: ./game
+    restart: on-failure
+    environment:
+      - GAMEDB_HOST=gamedb
+      - GAMEDB_PORT=6379
+      - API_PORT=8080
+
+  lb:
+    build: ./lb
+    depends_on:
+    - game
+    ports:
+    - 8008:80
+
+volumes:
+  gamedbvolume:
